@@ -6,25 +6,12 @@
 		"version":		"1.0",					// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
 		"description":	"Number to alias/symbol",
 		"author":		"Chezt",
-		"help url":		"",
+		"help url":		"https://www.scirra.com/forum/viewtopic.php?t=199223",
 		"category":		"General",				// Prefer to re-use existing categories, but you can set anything here
 		"type":			"object",				// either "world" (appears in layout and is drawn), else "object"
 		"rotatable":	true,					// only used when "type" is "world".  Enables an angle property on the object.
 		"dependency":	"decimal.min.js;NumberToAlias.js;NumberToAlias_Number.js",
-		"flags":		pf_singleglobal						// uncomment lines to enable flags...
-					//	| pf_singleglobal		// exists project-wide, e.g. mouse, keyboard.  "type" must be "object".
-					//	| pf_texture			// object has a single texture (e.g. tiled background)
-					//	| pf_position_aces		// compare/set/get x, y...
-					//	| pf_size_aces			// compare/set/get width, height...
-					//	| pf_angle_aces			// compare/set/get angle (recommended that "rotatable" be set to true)
-					//	| pf_appearance_aces	// compare/set/get visible, opacity...
-					//	| pf_tiling				// adjusts image editor features to better suit tiled images (e.g. tiled background)
-					//	| pf_animations			// enables the animations system.  See 'Sprite' for usage
-					//	| pf_zorder_aces		// move to top, bottom, layer...
-					//  | pf_nosize				// prevent resizing in the editor
-					//	| pf_effects			// allow WebGL shader effects to be added
-					//  | pf_predraw			// set for any plugin which draws and is not a sprite (i.e. does not simply draw
-												// a single non-tiling image the size of the object) - required for effects to work properly
+		"flags":		pf_singleglobal
 	};
 };
 
@@ -45,19 +32,6 @@
 
 ////////////////////////////////////////
 // Conditions
-
-// AddCondition(id,					// any positive integer to uniquely identify this condition
-//				flags,				// (see docs) cf_none, cf_trigger, cf_fake_trigger, cf_static, cf_not_invertible,
-//									// cf_deprecated, cf_incompatible_with_triggers, cf_looping
-//				list_name,			// appears in event wizard list
-//				category,			// category in event wizard list
-//				display_str,		// as appears in event sheet - use {0}, {1} for parameters and also <b></b>, <i></i>
-//				description,		// appears in event wizard dialog when selected
-//				script_name);		// corresponding runtime function name
-				
-// example				
-AddNumberParam("Number", "Enter a number to test if positive.");
-AddCondition(0, cf_none, "Is number positive", "My category", "{0} is positive", "Description for my condition!", "MyCondition");
 
 
 ////////////////////////////////////////
@@ -81,24 +55,24 @@ AddComboParamOption("False");
 AddComboParam("Capitalize", "Is Capitalize", 0);
 AddAction(3, af_none, "Is Capitalize", "", "Is Capitalize <b>{0}</b>", "Is Capitalize", "SetCapitalize");
 
+AddComboParamOption("True");
+AddComboParamOption("False");
+AddComboParam("Enable Fixed Point", "Is fixed point enabled", 0);
+AddNumberParam("Length", "Length fixed point if enabled", 2);
+AddNumberParam("Minimum to display", "Minimum digit to display fixed point, ex: 1M = 6", 6);
+AddAction(4, af_none, "Fixed Point", "", "Fixed point <b>{0}</b>, Length <b>{1}</b>, Minimum Length <b>{2}</b>", "Fixed Point", "SetFixedPoint");
+
 ////////////////////////////////////////
 // Expressions
 
-AddNumberParam("Number", "Number to convert.");
+AddAnyTypeParam("Number", "Number to convert.");
 AddExpression(0, ef_return_string, "Get Text", "Convert int to alias", "Convert", "Return string.");
+
+AddAnyTypeParam("Number", "Number to convert.");
+AddExpression(1, ef_return_string, "Get Text", "Convert exponential to string", "ToString", "Return string.");
 
 ////////////////////////////////////////
 ACESDone();
-
-////////////////////////////////////////
-// Array of property grid properties for this plugin
-// new cr.Property(ept_integer,		name,	initial_value,	description)		// an integer value
-// new cr.Property(ept_float,		name,	initial_value,	description)		// a float value
-// new cr.Property(ept_text,		name,	initial_value,	description)		// a string
-// new cr.Property(ept_color,		name,	initial_value,	description)		// a color dropdown
-// new cr.Property(ept_font,		name,	"Arial,-16", 	description)		// a font with the given face name and size
-// new cr.Property(ept_combo,		name,	"Item 1",		description, "Item 1|Item 2|Item 3")	// a dropdown list (initial_value is string of initially selected item)
-// new cr.Property(ept_link,		name,	link_text,		description, "firstonly")		// has no associated value; simply calls "OnPropertyChanged" on click
 
 var property_list = [];
 	

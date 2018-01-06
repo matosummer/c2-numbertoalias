@@ -1,35 +1,42 @@
 function NumberAlias(bn_,num_) {
     this.LANG = "en";
     this.NUM = num_; 
-    this.floatLength = 2;
+    this.fixedPointEnable = true;
+    this.fixedPointLength = 2;
+    this.fixedPointMin = 6;
     this.isCapitalize = true;
     this.typeAlias = "name";
     this.whiteSpace = " ";
     this.decimal = bn_;
+    this.limitLength = this.NUM["en"][this.typeAlias].length + 1;
+    //1e42 = Limit length number in en * 3
+    this.decimal.set({ toExpPos:42, maxE: 42});
   }
 
 NumberAlias.prototype.Convert = function(number) {
-    var limit = this.NUM["en"][this.typeAlias].length;
     var indexLog = Math.floor(Math.log10(number));
+    var _numberAlias = new this.decimal(number);  
     var indexName = Math.floor(indexLog/3);
-    var _numberAlias = "";  
-  
-    if(indexName > limit) {
+    if(indexName >= this.limitLength) {
       return "Limit Text";
     }
     else if(indexName <= 1) {
-        if(number < Math.pow(10, 3))
-            return number.toString();
-  
-        _numberAlias = parseInt(number / this.decimal.pow(10, 3)); 
+        if(indexLog >= 3)
+            _numberAlias = _numberAlias.dividedBy(1000); 
     } 
     else {
-      var numberAfter = new this.decimal(number).dividedBy(this.decimal.pow(10, indexName * 3));
-      var _floatLength = 100 * this.floatLength;
-      _numberAlias = new this.decimal(numberAfter)
-      .toFixed(this.floatLength);
+        _numberAlias = _numberAlias.dividedBy(this.decimal.pow(10, indexName*3));
     }
   
+    if(this.fixedPointEnable && this.fixedPointLength > 0 && indexLog > this.fixedPointMin) {
+        _numberAlias = _numberAlias.toFixed(this.fixedPointLength);
+    } else {
+        _numberAlias = _numberAlias.toFixed(0);
+    }
+
+    if(indexLog < 3)
+        return _numberAlias.toString();
+
     return _numberAlias + this.whiteSpace + this.GetNameAlias(indexName - 1);
 }
   
@@ -49,6 +56,10 @@ NumberAlias.prototype.Capitalize = function(str) {
       return str;
 }
   
+NumberAlias.prototype.ConvertToString = function(number) {
+    return new this.decimal(number).toString();
+}
+
 NumberAlias.prototype.SetWhiteSpace = function(str) {
     this.whiteSpace = str;
 }
@@ -63,4 +74,16 @@ NumberAlias.prototype.SetType = function(str) {
 
 NumberAlias.prototype.SetCapitalize = function(str) {
     this.isCapitalize = str;
+}
+
+NumberAlias.prototype.SetFixedPointLength = function(str) {
+    this.fixedPointLength = str;
+}
+
+NumberAlias.prototype.SetFixedPointMin = function(str) {
+    this.fixedPointMin = str;
+}
+
+NumberAlias.prototype.EnableFixedPoint = function(str) {
+    this.fixedPointEnable = str;
 }

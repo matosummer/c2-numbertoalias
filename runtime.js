@@ -6,8 +6,6 @@ assert2(cr.plugins_, "cr.plugins_ not created");
 
 /////////////////////////////////////
 // Plugin class
-// *** CHANGE THE PLUGIN ID HERE *** - must match the "id" property in edittime.js
-//          vvvvvvvv
 cr.plugins_.NumberToAlias = function(runtime)
 {
 	this.runtime = runtime;
@@ -15,9 +13,6 @@ cr.plugins_.NumberToAlias = function(runtime)
 
 (function ()
 {
-	/////////////////////////////////////
-	// *** CHANGE THE PLUGIN ID HERE *** - must match the "id" property in edittime.js
-	//                            vvvvvvvv
 	var pluginProto = cr.plugins_.NumberToAlias.prototype;
 	
 	/////////////////////////////////////
@@ -106,17 +101,7 @@ cr.plugins_.NumberToAlias = function(runtime)
 		// with their name and value, and some other optional settings.
 		propsections.push({
 			"title": "My debugger section",
-			"properties": [
-				// Each property entry can use the following values:
-				// "name" (required): name of the property (must be unique within this section)
-				// "value" (required): a boolean, number or string for the value
-				// "html" (optional, default false): set to true to interpret the name and value
-				//									 as HTML strings rather than simple plain text
-				// "readonly" (optional, default false): set to true to disable editing the property
-				
-				// Example:
-				// {"name": "My property", "value": this.myValue}
-			]
+			"properties": []
 		});
 	};
 	
@@ -167,6 +152,18 @@ cr.plugins_.NumberToAlias = function(runtime)
 		}
 		this.nta.SetCapitalize(type_);
 	}
+
+	Acts.prototype.SetFixedPoint = function(enable_, length_, minDisplay_) {
+		switch (enable_) {
+			case 0: enable_ = true; break;
+			case 1: enable_ = false; break;
+		}
+		this.nta.EnableFixedPoint(enable_);
+
+		this.nta.SetFixedPointLength(length_);
+
+		this.nta.SetFixedPointMin(minDisplay_);
+	}
 	pluginProto.acts = new Acts();
 	
 	//////////////////////////////////////
@@ -175,9 +172,24 @@ cr.plugins_.NumberToAlias = function(runtime)
 
 	Exps.prototype.Convert = function (ret, number_)
 	{
+		if(typeof number_ === "string" && number_.length === 0) {
+			ret.set_string("0");
+			return;
+		}
+
 		ret.set_string(this.nta.Convert(number_));
-	};
+	}
 	
+	Exps.prototype.ToString = function(ret, number_)
+	{
+		if(typeof number_ === "string" && number_.length === 0) {
+			ret.set_string("0");
+			return;
+		}
+		
+		ret.set_string(this.nta.ConvertToString(number_));
+	}
+
 	pluginProto.exps = new Exps();
 
 }());
