@@ -3,7 +3,7 @@
 	return {
 		"name":			"NumberToAlias",				// as appears in 'insert object' dialog, can be changed as long as "id" stays the same
 		"id":			"NumberToAlias",				// this is used to identify this plugin and is saved to the project; never change it
-		"version":		"1.0",					// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
+		"version":		"1.1",					// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
 		"description":	"Number to alias/symbol",
 		"author":		"Chezt",
 		"help url":		"https://www.scirra.com/forum/viewtopic.php?t=199223",
